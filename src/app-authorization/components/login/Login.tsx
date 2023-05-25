@@ -5,6 +5,7 @@ import './Login.scss';
 import Button from '../../../common/UI/Button/Button';
 import AuthService from '../../services/AuthService';
 import { LoginRequest } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 const schema = yup.object().shape({
   email: yup.string().required().email(),
@@ -17,9 +18,15 @@ const Login = () => {
     mode: 'onChange'
   });
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<LoginRequest> = data => {
     AuthService.loginUser(data).then((isSuccessful: boolean) => {
-      console.log(isSuccessful);
+      if (isSuccessful) {
+        navigate('/');
+      } else {
+        alert('Login failed');
+      }
     });
   };
 

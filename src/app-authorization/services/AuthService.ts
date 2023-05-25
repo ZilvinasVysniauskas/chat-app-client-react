@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Moment } from "moment";
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 // import { useHistory } from "react-router-dom";
 
 const API_URL = '/auth'; // your API endpoint
@@ -15,7 +16,6 @@ const AuthService = {
   registerUser(registerRequest: RegisterRequest): Promise<boolean> {
     return axios.post<AuthResponse>(`${API_URL}/register`, registerRequest).then(res => {
         this.setSession(res.data);
-        // useHistory().push("/");
         return true;
       }).catch(err => {
         console.log(err);
@@ -27,7 +27,6 @@ const AuthService = {
     return axios.post(`${API_URL}/login`, loginRequest)
       .then(res => {
         this.setSession(res.data);
-        // useHistory().push("/");
         return true;
       }).catch(err => {
         console.log(err);
@@ -39,7 +38,6 @@ const AuthService = {
     localStorage.removeItem(LocalStorageKeys.token);
     localStorage.removeItem(LocalStorageKeys.expiresAt);
     localStorage.removeItem(LocalStorageKeys.userId);
-    // useHistory().push("/auth/login");
   },
 
   isLoggedIn() {
