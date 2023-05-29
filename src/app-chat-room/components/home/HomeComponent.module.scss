@@ -1,0 +1,16 @@
+@import '../../../global.scss';
+.container {
+  display: flex;
+}
+
+.menu {
+  min-width: 100px;
+  width: 10vw;
+  background-color: #f0f0f0;
+}
+
+.mainContent {
+  background-color: $primary-color;
+  flex: 1;
+  padding: 10px;
+}

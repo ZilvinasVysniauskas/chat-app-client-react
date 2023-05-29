@@ -1,0 +1,22 @@
+@import "../../../global.scss";
+
+.rce-mbox {
+  background-color: $green-color !important;
+  color: $light-color !important;
+  border-radius: 10px !important;
+  min-width: 0px !important;
+  font-family: 'Roboto', sans-serif;
+  color: #595959
+}
+
+.rce-mbox-text {
+  color: #595959;
+
+  &:after {
+    content: none !important;
+  }
+}
+
+.rce-mbox-left-notch {
+  display: none;
+}
