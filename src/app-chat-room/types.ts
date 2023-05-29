@@ -20,9 +20,10 @@ export interface MessageRequest {
 
 export interface Message {
     id: string
-    message: string | null;
+    text: string | null;
     file?: FileData | null;
     createdAt: Date;
+    sender: string;
   }
   
   export interface FileData {

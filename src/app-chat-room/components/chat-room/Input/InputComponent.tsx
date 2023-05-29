@@ -2,6 +2,9 @@ import { useState } from "react";
 import { AwsService } from "../../../services/AwsService";
 import { Message, MessageRequest } from "../../../types";
 import { v4 as uuidv4 } from 'uuid';
+import { LocalStorageKeys } from "../../../../common/constants";
+import TextInput from "../../../../common/UI/Input/TextInput";
+
 
 type InputComponentProps = {
     addMessage: (message: Message) => void;
@@ -11,6 +14,7 @@ type InputComponentProps = {
 
 const InputComponent = (props: InputComponentProps) => {
     const ROOM_ID = '646907ab6c3802ad2cc4ccb9';
+    const senderId = localStorage.getItem(LocalStorageKeys.userId) as string;
 
     const [message, setMessage] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,12 +22,11 @@ const InputComponent = (props: InputComponentProps) => {
     function sendMessage(): void {
         if (selectedFile) {
             handleFileMessageSend(selectedFile);
-            setMessage('');
         }
         if (message) {
             handleTextMessageSend();
-            setMessage('');
         }
+        setMessage('');
     }
 
     async function handleFileMessageSend(selectedFile: File): Promise<void> {
@@ -42,7 +45,8 @@ const InputComponent = (props: InputComponentProps) => {
 
         props.addMessage({
             id: getTemporaryRandomId(),
-            message: message,
+            text: message,
+            sender: senderId,
             file: {
                 fileName: selectedFile.name,
                 url: objectUrl,
@@ -55,8 +59,9 @@ const InputComponent = (props: InputComponentProps) => {
         props.socket.sendMessage({ message: message, roomId: ROOM_ID });
         props.addMessage({
             id: getTemporaryRandomId(),
-            message: message,
+            text: message,
             createdAt: new Date(),
+            sender: senderId,
         });
     }
 
@@ -72,14 +77,10 @@ const InputComponent = (props: InputComponentProps) => {
 
     return (
         <>
-            <input
-                value={message}
-                placeholder="Type your message"
-                onKeyDown={(e) => { if (e.key === "Enter") sendMessage() }}
-                onChange={(e) => setMessage(e.target.value)}
-            />
-            <input type="file" onChange={onFileSelected} accept="image/*, video/*" />
-            <button onClick={sendMessage}>Send</button>
+            <TextInput
+                message={message}
+                setMessage={setMessage}
+            ></TextInput>
         </>
     );
 };

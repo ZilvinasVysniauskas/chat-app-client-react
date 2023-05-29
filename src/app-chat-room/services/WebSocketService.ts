@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { MessageRequest } from '../types';
-import { LocalStorageKeys, Sockets } from '../constants';
+import { Sockets } from '../constants';
 import { Message } from '../types';
+import { LocalStorageKeys } from '../../common/constants';
 
 const SOCKET_SERVER_URL = "http://localhost:3000";
 
@@ -13,7 +14,7 @@ export const useSocket = (roomId: string) => {
         socketRef.current = io(SOCKET_SERVER_URL, {
             query: { token: localStorage.getItem(LocalStorageKeys.token) }
         });
-
+        
         socketRef.current.on(Sockets.connect, () => {
             console.log('connected');
         });
@@ -61,6 +62,11 @@ export const useSocket = (roomId: string) => {
         socketRef.current?.off(Sockets.videoState);
         socketRef.current?.off(Sockets.videoTimestamp);
     };
+
+    const unsubscribeChatComponent = () => {
+        socketRef.current?.off(Sockets.message);
+    };
+
     return {
         socket: socketRef.current,
         sendMessage,
@@ -69,6 +75,7 @@ export const useSocket = (roomId: string) => {
         listenToVideoState,
         listenToVideoTimestamp,
         listenToMessage,
-        unsubscribeYoutube
+        unsubscribeYoutube,
+        unsubscribeChatComponent,
     };
 };

@@ -2,15 +2,9 @@ import axios from 'axios';
 import { Moment } from "moment";
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
-// import { useHistory } from "react-router-dom";
+import { LocalStorageKeys } from '../../common/constants';
 
 const API_URL = '/auth'; // your API endpoint
-const LocalStorageKeys = {
-  token: 'token',
-  expiresAt: 'expiresAt',
-  userId: 'userId',
-};
 
 const AuthService = {
   registerUser(registerRequest: RegisterRequest): Promise<boolean> {
@@ -41,6 +35,7 @@ const AuthService = {
   },
 
   isLoggedIn() {
+    console.log(moment().isBefore(this.getExpiration()));
     return moment().isBefore(this.getExpiration());
   },
 

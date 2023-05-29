@@ -1,4 +1,5 @@
 import { Message } from "../../../types";
+import ChatMessage from "../../../../common/UI/ChatMessage/ChatMessage";
 
 
 type MessagesComponentProps = {
@@ -14,24 +15,22 @@ const MessagesComponent = (props: MessagesComponentProps) => {
 
     return (
         <>
-            <ul>
-                {props.messages.map(message => (
-                    <li key={message.id}>
-                        {message.message && <p>{message.message}</p>}
-                        {message.file && (
-                            <div>
-                                {isImage(message.file.fileName) ? (
-                                    <img src={message.file.url} alt="" />
-                                ) : (
-                                    <video controls>
-                                        <source src={message.file.url} type="video/mp4" />
-                                    </video>
-                                )}
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
+
+            {props.messages.map(message => (
+                <>
+                    {
+                        message.text &&
+                        <ChatMessage
+                            message={message}
+                        />
+                    }
+                    {
+                        message.file &&
+                        <div>file</div>
+                    }
+
+                </>
+            ))}
         </>
     );
 };

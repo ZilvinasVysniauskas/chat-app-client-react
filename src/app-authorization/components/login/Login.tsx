@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import './Login.scss';
-import Button from '../../../common/UI/Button/Button';
+import UIButton from '../../../common/UI/Button/Button';
 import AuthService from '../../services/AuthService';
 import { LoginRequest } from '../../types';
 import { useNavigate } from 'react-router-dom';
@@ -20,14 +20,13 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginRequest> = data => {
-    AuthService.loginUser(data).then((isSuccessful: boolean) => {
-      if (isSuccessful) {
-        navigate('/');
-      } else {
-        alert('Login failed');
-      }
-    });
+  const onSubmit = async (data: LoginRequest) => {
+    const isSuccessful = await AuthService.loginUser(data);
+    if (isSuccessful) {
+      navigate('/');
+    } else {
+      alert('Invalid email or password');
+    }
   };
 
   return (
@@ -59,7 +58,11 @@ const Login = () => {
           </div>
         </div>
 
-        <Button primary onClick={onSubmit} disabled={!isValid} >Login</Button>
+        <UIButton
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isValid}
+          type='submit'
+        >Login</UIButton>
         <div className="forgot-password">
           <a href="#">Forgot password?</a>
         </div>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from 'react-youtube';
-import ts from "typescript";
 
 type YoutubeEmbedProps = {
     videoId: string;
@@ -15,12 +14,10 @@ type YoutubeEmbedProps = {
 
 const YoutubeEmbedComponent = (props: YoutubeEmbedProps) => {
     const playerRef = useRef<YouTubePlayer | null>(null);
-    const emitVideoStateRef = useRef(true);
+    const [emitVideoState, setEmitVideoState] = useState<boolean>(true);
 
     useEffect(() => {
-        props.socket.listenToVideoState((videoState: string) => {
-            console.log('videoState', videoState);
-            
+        props.socket.listenToVideoState((videoState: string) => {          
             switch (videoState) {
                 case 'play':
                     playerRef?.current?.playVideo();
@@ -29,12 +26,12 @@ const YoutubeEmbedComponent = (props: YoutubeEmbedProps) => {
                     playerRef?.current?.pauseVideo();
                     break;
             }
-            emitVideoStateRef.current = false;
+            setEmitVideoState(false);
         });
         props.socket.listenToVideoTimestamp((videoTimestamp: number) => {
-            console.log('videoTimestamp', videoTimestamp);
-            emitVideoStateRef.current = false;
+            setEmitVideoState(false);
             playerRef?.current?.seekTo(videoTimestamp);
+            playerRef?.current?.playVideo();
         });
 
         return () => { 
@@ -59,20 +56,17 @@ const YoutubeEmbedComponent = (props: YoutubeEmbedProps) => {
                 playerRef.current = event.target;
             }}
             onPause={() => {
-                if (emitVideoStateRef.current) {
-                    console.log('onPause');
+                if (emitVideoState) {
                     props.socket.emitVideoState('pause');
                 } else {
-                    emitVideoStateRef.current = true;
+                    setEmitVideoState(true);
                 } 
             }}
             onPlay={() => {
-                if (emitVideoStateRef.current) {
-                    console.log(playerRef.current?.getCurrentTime());
-                    props.socket.emitVideoState('play');
+                if (emitVideoState) {
                     props.socket.emitVideoTimestamp(playerRef.current?.getCurrentTime() || 0);
                 } else {
-                    emitVideoStateRef.current = true;
+                    setEmitVideoState(true);
                 }
             }}
         />
