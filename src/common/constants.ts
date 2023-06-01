@@ -1,9 +1,11 @@
 export const LocalStorageKeys = {
-    token: 'token',
-    expiresAt: 'expires_at',
-    userId: 'user_id'
+    TOKEN: 'token',
+    EXPIRES_AT: 'expires_at',
+    USER_ID: 'user_id'
 };
 
-export const headerNames = {
-    authorization: 'Authorization'
+export const HeaderNames = {
+    AUTHORIZATION: 'Authorization'
 };
+
+[LocalStorageKeys, HeaderNames].forEach((obj) => { Object.freeze(obj); });

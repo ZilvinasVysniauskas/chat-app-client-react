@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LocalStorageKeys, headerNames } from '../constants';
+import { LocalStorageKeys, HeaderNames } from '../constants';
 
 const axiosInstance = axios.create();
 
@@ -9,10 +9,10 @@ axiosInstance.interceptors.request.use(
       return config;
     }
 
-    const idToken = localStorage.getItem(LocalStorageKeys.token);
+    const idToken = localStorage.getItem(LocalStorageKeys.TOKEN);
     
     if (idToken) {
-      config.headers[headerNames.authorization] = 'Bearer ' + idToken;
+      config.headers[HeaderNames.AUTHORIZATION] = 'Bearer ' + idToken;
     }
     
     return config;

@@ -1,10 +1,12 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import AuthService from '../../services/AuthService';
 import { useNavigate } from 'react-router-dom';
 import './Register.scss';
+import UiInput from '../../../common/UI/Input/UiInput';
+import UiButton from '../../../common/UI/Button/UiButton';
 
 type FormData = {
     email: string;
@@ -18,12 +20,12 @@ const schema = yup.object().shape({
     password: yup.string().required(),
     passwordRepeat: yup.string().required().test('passwords-match', 'Passwords must match', function (value) {
         return this.parent.password === value;
-      }),
+    }),
     username: yup.string().required(),
 });
 
 function RegisterComponent() {
-    const { control, handleSubmit, formState: { errors, isValid } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors, isValid } } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
 
@@ -41,49 +43,34 @@ function RegisterComponent() {
 
     return (
         <div className="register-container">
-            <h2>Register</h2>
+
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-group">
-                    <label htmlFor="username">Username:</label>
-                    <Controller
-                        name="username"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => <input {...field} type="text" className="form-control" id="username" />}
-                    />
-                    {errors.username && <p>This field is required</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <Controller
-                        name="email"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => <input {...field} type="email" className="form-control" id="email" />}
-                    />
-                    {errors.email && <p>This field is required</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password:</label>
-                    <Controller
-                        name="password"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => <input {...field} type="password" className="form-control" id="password" />}
-                    />
-                    {errors.password && <p>This field is required</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="passwordRepeat">Repeat Password:</label>
-                    <Controller
-                        name="passwordRepeat"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => <input {...field} type="password" className="form-control" id="passwordRepeat" />}
-                    />
-                    {errors.passwordRepeat && <p>Passwords must match</p>}
-                </div>
-                <button type="submit" className="btn btn-primary" disabled={!isValid}>Register</button>
+                <UiInput
+                    type='username'
+                    register={register('username')}
+                    errorMessage={errors.username?.message}
+                />
+                <UiInput
+                    type='email'
+                    register={register('email')}
+                    errorMessage={errors.email?.message}
+                />
+                <UiInput
+                    type='password'
+                    register={register('password')}
+                    errorMessage={errors.password?.message}
+                />
+                <UiInput
+                    type='password'
+                    register={register('passwordRepeat')}
+                    errorMessage={errors.passwordRepeat?.message}
+                />
+                <UiButton
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={!isValid}
+                    type='submit'
+                >Register</UiButton>
+
             </form>
         </div>
     );

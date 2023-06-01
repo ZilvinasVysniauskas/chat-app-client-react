@@ -1,4 +1,4 @@
-import ChatMessage from '../../../common/UI/ChatMessage/ChatMessage';
+import UiChatMessage from '../../../common/UI/ChatMessage/UiChatMessage';
 import ChatRoomComponent from '../chat-room/ChatRoomComponent';
 import styles from './HomeComponent.module.scss';
 

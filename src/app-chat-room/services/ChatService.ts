@@ -14,7 +14,6 @@ const ChatService = {
     },
 
     async getMessages(roomId: string, offset: number, limit: number) {
-        console.log('getting messages', offset, limit)
         const response = await axios.get(`${BASE_URL}/${roomId}/messages`, {
             params: {
                 offset,

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../common/utils/axios';
 
 export const AwsService = {
     async uploadFile(file: File): Promise<string | undefined> {

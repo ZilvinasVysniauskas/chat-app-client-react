@@ -1,0 +1,45 @@
+@import "../../../global.scss";
+
+.rce-mbox {
+  // background-color: $green-color !important;
+  color: $light-color !important;
+  border-radius: 10px !important;
+  min-width: 0px !important;
+  font-family: 'Roboto', sans-serif;
+  color: #595959
+}
+
+.rce-mbox-text {
+  color: #595959;
+
+  &:after {
+    content: none !important;
+  }
+}
+
+.rce-mbox-left-notch,
+.rce-mbox-right-notch {
+  display: none;
+}
+
+.my-custom-photo-message {
+  .rce-mbox-photo--img {
+    max-height: none !important;
+  }
+  img {
+    max-width: 500px;
+    height: auto;
+    /* adjust as needed */
+  }
+}
+
+.my-custom-video-message {
+  .rce-mbox-video--video {
+    max-height: none !important;
+  }
+  video {
+    max-width: 700px;
+    height: auto;
+    /* adjust as needed */
+  }
+}

@@ -7,21 +7,22 @@ export interface ChatRoom {
 }
 
 export enum MessageTypes {
-    TEXT = 'TEXT',
-    FILE = 'FILE'
+    TEXT = 'text',
+    VIDEO = 'video',
+    PHOTO = 'photo',
 }
 
 export interface MessageRequest {
     roomId: string;
-    message: string | null;
+    message?: string | null;
     savedFileId?: string | null;
     fileKey?: string | null;
 }
 
 export interface Message {
     id: string
-    text: string | null;
-    file?: FileData | null;
+    text?: string;
+    file?: FileData;
     createdAt: Date;
     sender: string;
   }

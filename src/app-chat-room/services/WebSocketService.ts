@@ -12,18 +12,18 @@ export const useSocket = (roomId: string) => {
 
     useEffect(() => {
         socketRef.current = io(SOCKET_SERVER_URL, {
-            query: { token: localStorage.getItem(LocalStorageKeys.token) }
+            query: { token: localStorage.getItem(LocalStorageKeys.TOKEN) }
         });
         
-        socketRef.current.on(Sockets.connect, () => {
+        socketRef.current.on(Sockets.CONNECT, () => {
             console.log('connected');
         });
 
-        socketRef.current.on(Sockets.error, (error: any) => {
+        socketRef.current.on(Sockets.ERROR, (error: any) => {
             console.log(error);
         });
 
-        socketRef.current.emit(Sockets.joinRoom, roomId);
+        socketRef.current.emit(Sockets.JOIN_ROOM, roomId);
 
         return () => {
             socketRef.current?.disconnect();
@@ -31,40 +31,42 @@ export const useSocket = (roomId: string) => {
     }, [roomId]);
 
     const sendMessage = (message: MessageRequest) => {
-        socketRef.current?.emit(Sockets.message, {
+        socketRef.current?.emit(Sockets.MESSAGE, {
             roomId: roomId,
             message: message.message,
-            sender: localStorage.getItem(LocalStorageKeys.userId),
+            sender: localStorage.getItem(LocalStorageKeys.USER_ID),
+            savedFileId: message.savedFileId,
+            fileKey: message.fileKey,
         });
     };
 
     const emitVideoState = (videoState: string) => {
-        socketRef.current?.emit(Sockets.videoState, videoState);
+        socketRef.current?.emit(Sockets.VIDEO_STATE, videoState);
     };
 
     const emitVideoTimestamp = (videoTime: number) => {
-        socketRef.current?.emit(Sockets.videoTimestamp, videoTime);
+        socketRef.current?.emit(Sockets.VIDEO_TIME_STAMP, videoTime);
     };
 
     const listenToVideoState = (handler: (videoState: string) => void) => {
-        socketRef.current?.on(Sockets.videoState, handler);
+        socketRef.current?.on(Sockets.VIDEO_STATE, handler);
     };
 
     const listenToVideoTimestamp = (handler: (videoTime: number) => void) => {
-        socketRef.current?.on(Sockets.videoTimestamp, handler);
+        socketRef.current?.on(Sockets.VIDEO_TIME_STAMP, handler);
     };
 
     const listenToMessage = (handler: (message: Message) => void) => {
-        socketRef.current?.on(Sockets.message, handler);
+        socketRef.current?.on(Sockets.MESSAGE, handler);
     };
 
     const unsubscribeYoutube = () => {
-        socketRef.current?.off(Sockets.videoState);
-        socketRef.current?.off(Sockets.videoTimestamp);
+        socketRef.current?.off(Sockets.VIDEO_STATE);
+        socketRef.current?.off(Sockets.VIDEO_TIME_STAMP);
     };
 
     const unsubscribeChatComponent = () => {
-        socketRef.current?.off(Sockets.message);
+        socketRef.current?.off(Sockets.MESSAGE);
     };
 
     return {

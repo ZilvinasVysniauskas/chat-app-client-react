@@ -1,38 +1,35 @@
-import { Message } from "../../../types";
-import ChatMessage from "../../../../common/UI/ChatMessage/ChatMessage";
-
+import { Message, MessageTypes } from "../../../types";
+import ChatMessage from "../../../../common/UI/ChatMessage/UiChatMessage";
+import { ExceptedVideoExtensions as AllowedVideoExtensions } from "../../../constants";
+import ScrollBox from "../../../../common/UI/ScrollBox/UiScrollBox";
 
 type MessagesComponentProps = {
     messages: Message[];
     fileUrl: Map<string, string>;
 };
 
-function isImage(fileName: string): boolean {
-    return ['jpg', 'jpeg', 'png', 'gif', 'webp'].some(ext => fileName?.toLowerCase().endsWith(ext));
-};
-
 const MessagesComponent = (props: MessagesComponentProps) => {
 
+    const getMessageType = (message: Message): MessageTypes => {
+        if (message.file) {
+            return AllowedVideoExtensions.includes(message.file.fileName.split('.').pop() as string) ?
+                MessageTypes.VIDEO : MessageTypes.PHOTO;
+        }
+        return MessageTypes.TEXT;
+    };
     return (
         <>
-
             {props.messages.map(message => (
                 <>
-                    {
-                        message.text &&
-                        <ChatMessage
-                            message={message}
-                        />
-                    }
-                    {
-                        message.file &&
-                        <div>file</div>
-                    }
-
+                    <ChatMessage
+                        message={message}
+                        type={getMessageType(message)}
+                    />
                 </>
+
             ))}
         </>
     );
-};
+}
 
 export default MessagesComponent;

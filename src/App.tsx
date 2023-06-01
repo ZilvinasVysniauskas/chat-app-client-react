@@ -9,6 +9,8 @@ import ProtectedRoute, { ProtectedRouteProps } from "./common/utils/ProtectedRou
 //styles import
 import './global.scss'
 import "react-chat-elements/dist/main.css"
+import { ThemeProvider } from "@mui/material";
+import { colorTheme } from "./MaterialTheme";
 
 
 const defaultProtectedRouteProps: Omit<ProtectedRouteProps, 'outlet'> = {
@@ -19,11 +21,12 @@ const defaultProtectedRouteProps: Omit<ProtectedRouteProps, 'outlet'> = {
 
 const App = () => {
   return (
-    <Routes>
-
-      <Route path="/auth/*" element={<AuthRoutes />} />
-      <Route path='/' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<HomeComponent />} />} />
-    </Routes>
+    <ThemeProvider theme={colorTheme}>
+      <Routes>
+        <Route path="/auth/*" element={<AuthRoutes />} />
+        <Route path='/' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<HomeComponent />} />} />
+      </Routes>
+    </ThemeProvider>
   );
 };
 

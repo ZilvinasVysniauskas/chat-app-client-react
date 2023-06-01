@@ -3,8 +3,10 @@ import { AwsService } from "../../../services/AwsService";
 import { Message, MessageRequest } from "../../../types";
 import { v4 as uuidv4 } from 'uuid';
 import { LocalStorageKeys } from "../../../../common/constants";
-import TextInput from "../../../../common/UI/Input/TextInput";
-
+import UiInput from "../../../../common/UI/Input/UiInput";
+import { Box } from '@mui/system';
+import UiButton from "../../../../common/UI/Button/UiButton";
+import FileInputComponent from "./FileInput.tsx/FileInput";
 
 type InputComponentProps = {
     addMessage: (message: Message) => void;
@@ -12,24 +14,24 @@ type InputComponentProps = {
     socket: { sendMessage: (message: MessageRequest) => void };
 }
 
+
 const InputComponent = (props: InputComponentProps) => {
     const ROOM_ID = '646907ab6c3802ad2cc4ccb9';
-    const senderId = localStorage.getItem(LocalStorageKeys.userId) as string;
-
-    const [message, setMessage] = useState('');
+    const senderId = localStorage.getItem(LocalStorageKeys.USER_ID) as string;
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [message, setMessage] = useState<string>('');
 
-    function sendMessage(): void {
+    const sendMessage = () => {
         if (selectedFile) {
-            handleFileMessageSend(selectedFile);
-        }
-        if (message) {
-            handleTextMessageSend();
+            handleWithFileMessageSend(selectedFile, message);
+        } else if (message) {
+            handleTextOnlyMessageSend(message);
         }
         setMessage('');
-    }
+        setSelectedFile(null);
+    };
 
-    async function handleFileMessageSend(selectedFile: File): Promise<void> {
+    async function handleWithFileMessageSend(selectedFile: File, message?: string): Promise<void> {
         const objectUrl = URL.createObjectURL(selectedFile);
         props.addFileUrl(selectedFile.name, objectUrl);
 
@@ -55,7 +57,7 @@ const InputComponent = (props: InputComponentProps) => {
         });
     }
 
-    function handleTextMessageSend(): void {
+    function handleTextOnlyMessageSend(message: string): void {
         props.socket.sendMessage({ message: message, roomId: ROOM_ID });
         props.addMessage({
             id: getTemporaryRandomId(),
@@ -69,19 +71,22 @@ const InputComponent = (props: InputComponentProps) => {
         return uuidv4();
     }
 
-    function onFileSelected(event: React.ChangeEvent<HTMLInputElement>) {
-        if (event.target.files && event.target.files.length > 0) {
-            setSelectedFile(event.target.files[0]);
-        }
-    }
-
     return (
-        <>
-            <TextInput
-                message={message}
-                setMessage={setMessage}
-            ></TextInput>
-        </>
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center'
+            }}
+        >
+            <FileInputComponent
+                selectedFile={selectedFile}
+                setSelectedFile={setSelectedFile}
+            />
+            <UiInput type='message' setTextValue={setMessage} value={message} />
+            <UiButton onClick={sendMessage} type='send'>
+                Send
+            </UiButton>
+        </Box>
     );
 };
 

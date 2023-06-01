@@ -29,9 +29,9 @@ const AuthService = {
   },
 
   logout() {
-    localStorage.removeItem(LocalStorageKeys.token);
-    localStorage.removeItem(LocalStorageKeys.expiresAt);
-    localStorage.removeItem(LocalStorageKeys.userId);
+    localStorage.removeItem(LocalStorageKeys.TOKEN);
+    localStorage.removeItem(LocalStorageKeys.EXPIRES_AT);
+    localStorage.removeItem(LocalStorageKeys.USER_ID);
   },
 
   isLoggedIn() {
@@ -40,15 +40,15 @@ const AuthService = {
   },
 
   getExpiration(): Moment | null {
-    const expiration = localStorage.getItem(LocalStorageKeys.expiresAt);
+    const expiration = localStorage.getItem(LocalStorageKeys.EXPIRES_AT);
     return expiration ? moment(JSON.parse(expiration)) : null;
   },
 
   setSession(auth: AuthResponse) {
     const expiresAt = moment().add(auth.expiresIn, 'second');
-    localStorage.setItem(LocalStorageKeys.token, auth.token);
-    localStorage.setItem(LocalStorageKeys.expiresAt, JSON.stringify(expiresAt.valueOf()));
-    localStorage.setItem(LocalStorageKeys.userId, auth.userId);
+    localStorage.setItem(LocalStorageKeys.TOKEN, auth.token);
+    localStorage.setItem(LocalStorageKeys.EXPIRES_AT, JSON.stringify(expiresAt.valueOf()));
+    localStorage.setItem(LocalStorageKeys.USER_ID, auth.userId);
   }
 }
 
